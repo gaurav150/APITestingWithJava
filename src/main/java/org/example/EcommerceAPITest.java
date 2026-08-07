@@ -20,6 +20,8 @@ public class EcommerceAPITest {
     String userId;
     String productId;
     String messageResponse;
+    List<String> orderId;
+    String firstOrderId;
 
 
     @Test
@@ -97,6 +99,11 @@ public class EcommerceAPITest {
 
         String messageType = orderResponse.getMessage();
         System.out.println(messageType);
+        System.out.println("response of order is -> ");
+        System.out.println(orderResponse);
+        orderId = orderResponse.getOrders();
+        firstOrderId = orderId.getFirst();
+        System.out.println("first order Id is -> " + firstOrderId);
 
 
     }
@@ -118,6 +125,25 @@ public class EcommerceAPITest {
         System.out.println("response is " + deleteProductResponse);
         Assert.assertEquals(messageDeletedProduct, "Product Deleted Successfully");
 
+    }
+
+    @Test
+    @SuppressWarnings("java:S106")
+    public void deleteOrderFromCart() {
+        deleteProductFromUI();
+        RequestSpecification deleteBaseRequest = given().spec(deleteOrderFromCart(token, firstOrderId));
+        String responseOfDeletedOrder = deleteBaseRequest
+                .when()
+                .delete("/api/ecom/order/delete-order/{orderId}")
+                .then()
+                .statusCode(200)
+                .extract()
+                .response()
+                .asString();
+        System.out.println(responseOfDeletedOrder);
+        JsonPath jdc = new JsonPath(responseOfDeletedOrder);
+        String message = jdc.getString("message");
+        Assert.assertEquals(message,"Orders Deleted Successfully");
     }
 
     private static RequestSpecification requestSpec() {
@@ -155,6 +181,15 @@ public class EcommerceAPITest {
                 .setContentType(ContentType.JSON)
                 .addHeader("Authorization", token)
                 .addPathParam("productId", id)
+                .build();
+    }
+
+    private static RequestSpecification deleteOrderFromCart(String token, String id) {
+        return new RequestSpecBuilder()
+                .setBaseUri(BASE_URI)
+                .setContentType(ContentType.JSON)
+                .addHeader("Authorization", token)
+                .addPathParam("orderId", id)
                 .build();
     }
 }
