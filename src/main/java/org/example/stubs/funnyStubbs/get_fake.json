@@ -1,0 +1,14 @@
+{
+  "name": "getting_fake",
+  "request": {
+    "method": "GET",
+    "url": "/getting/fake"
+  },
+  "response": {
+    "status": 401,
+    "body": "you are fake please be genuine.",
+    "headers": {
+      "Content-Type": "text/plain"
+    }
+  }
+}

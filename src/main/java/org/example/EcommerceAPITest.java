@@ -3,6 +3,7 @@ package org.example;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -191,5 +192,17 @@ public class EcommerceAPITest {
                 .addHeader("Authorization", token)
                 .addPathParam("orderId", id)
                 .build();
+    }
+
+    @Test
+    public void testSample() {
+       Response response = given().baseUri("https://fakerestapi-1.wiremockapi.cloud/")
+               .pathParam("userId",9)
+                .when()
+                .get("/api/users/{userId}")
+                .then()
+                .statusCode(200).extract().response();
+        System.out.println("response is =");
+        System.out.println(response.prettyPrint());
     }
 }

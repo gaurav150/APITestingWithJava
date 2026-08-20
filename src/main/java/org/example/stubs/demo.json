@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/whereIAmGoing"
+  },
+  "response": {
+    "status": 404,
+    "body": "Hey ! I am going to office.",
+    "headers": {
+      "Content-Type" : "text/plain"
+    }
+  }
+}

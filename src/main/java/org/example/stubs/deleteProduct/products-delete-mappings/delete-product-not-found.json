@@ -1,0 +1,17 @@
+{
+  "name": "delete_product_not_found",
+  "request": {
+    "method": "DELETE",
+    "urlPathPattern": "/products/[0-9]+"
+  },
+  "response": {
+    "status": 404,
+    "jsonBody": {
+      "error": "Product not found with the id you are looking for Bye I am going."
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "priority": 5
+}

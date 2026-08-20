@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/whatsup"
+  },
+  "response": {
+    "status": 200,
+    "body": "Hey ! this mock is api body",
+    "headers": {
+      "Content-Type" : "text/plain"
+    }
+  }
+}

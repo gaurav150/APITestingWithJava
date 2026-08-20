@@ -1,0 +1,14 @@
+{
+  "name": "hitting_nb",
+  "request": {
+    "method": "GET",
+    "url": "/hitting"
+  },
+  "response": {
+    "status": 503,
+    "body": "you are about to hit no body.",
+    "headers": {
+      "Content-Type": "text/plain"
+    }
+  }
+}

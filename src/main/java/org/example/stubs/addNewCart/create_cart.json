@@ -1,0 +1,41 @@
+{
+  "name": "create_cart",
+  "request": {
+    "method": "POST",
+    "url": "/carts",
+    "bodyPatterns": [
+      {
+        "matchesJsonSchema": {
+          "type": "object",
+          "properties": {
+            "userId": { "type": "integer" },
+            "products": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "integer" },
+                  "title": { "type": "string" },
+                  "price": { "type": "number" },
+                  "description": { "type": "string" },
+                  "category": { "type": "string" },
+                  "image": { "type": "string" }
+                },
+                "required": ["id", "title", "price", "description", "category", "image"]
+              }
+            }
+          },
+          "required": ["userId", "products"]
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 201,
+    "body": "{\"id\": 11, \"userId\": {{jsonPath request.body '$.userId'}}, \"products\": {{{jsonPath request.body '$.products'}}},\"message\": \"Yay you got it.\"}",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "transformers": ["response-template"]
+  }
+}

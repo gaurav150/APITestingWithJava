@@ -1,0 +1,14 @@
+{
+  "name": "hitting_rabbit",
+  "request": {
+    "method": "GET",
+    "url": "/hitting"
+  },
+  "response": {
+    "status": 200,
+    "body": "you are about to hit rabbit.",
+    "headers": {
+      "Content-Type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "get_product_not_found",
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/products/[0-9]+"
+  },
+  "response": {
+    "status": 400,
+    "jsonBody": {
+      "error": "you are at wrong Place with Wrong product Id Try something genuine"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "priority": 5
+}
