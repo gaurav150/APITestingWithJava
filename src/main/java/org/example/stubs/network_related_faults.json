@@ -1,0 +1,10 @@
+{
+  "name": "network_related_faults",
+  "request": {
+    "method": "GET",
+    "url": "/getting/fault"
+  },
+  "response": {
+    "fault": "CONNECTION_RESET_BY_PEER"
+  }
+}

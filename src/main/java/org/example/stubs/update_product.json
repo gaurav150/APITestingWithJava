@@ -1,0 +1,73 @@
+{
+  "mappings": [
+    {
+      "name": "update_product",
+      "request": {
+        "method": "PUT",
+        "urlPathPattern": "/products/([1-9]|1[0-9]|20)",
+        "bodyPatterns": [
+          {
+            "matchesJsonSchema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "number"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "image": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "title",
+                "price",
+                "description",
+                "category",
+                "image"
+              ]
+            }
+          }
+        ]
+      },
+      "response": {
+        "status": 200,
+        "body": "{\"id\": {{request.pathSegments.[1]}}, \"title\": \"{{jsonPath request.body '$.title'}}\", \"price\": {{jsonPath request.body '$.price'}}, \"description\": \"{{jsonPath request.body '$.description'}}\", \"category\": \"{{jsonPath request.body '$.category'}}\", \"image\": \"{{jsonPath request.body '$.image'}}\"}",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "transformers": [
+          "response-template"
+        ]
+      },
+      "priority": 1
+    },
+    {
+      "name": "update_product_not_found",
+      "request": {
+        "method": "PUT",
+        "urlPathPattern": "/products/[0-9]+"
+      },
+      "response": {
+        "status": 400,
+        "jsonBody": {
+          "error": "Again, you have encountered an incorrect product ID."
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "priority": 5
+    }
+  ],
+  "meta": {
+    "total": 2
+  }
+}

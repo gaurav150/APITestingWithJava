@@ -1,5 +1,5 @@
 {
-  "name": "create_cart",
+  "name": "create_new_cart",
   "request": {
     "method": "POST",
     "url": "/carts",

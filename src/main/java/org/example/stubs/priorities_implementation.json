@@ -1,0 +1,76 @@
+{
+  "mappings": [
+    {
+      "name": "getting_fake",
+      "request": {
+        "method": "GET",
+        "url": "/getting/fake"
+      },
+      "response": {
+        "status": 401,
+        "body": "you are fake please be genuine.",
+        "headers": {
+          "Content-Type": "text/plain"
+        }
+      }
+    },
+    {
+      "name": "hitting_nb",
+      "request": {
+        "method": "GET",
+        "url": "/hitting"
+      },
+      "response": {
+        "status": 503,
+        "body": "you are about to hit no body.",
+        "headers": {
+          "Content-Type": "text/plain"
+        }
+      },
+      "priority": 5
+    },
+    {
+      "name": "hitting_rabbit",
+      "request": {
+        "method": "GET",
+        "url": "/hitting"
+      },
+      "response": {
+        "status": 200,
+        "body": "you are about to hit rabbit.",
+        "headers": {
+          "Content-Type": "text/plain"
+        }
+      },
+      "priority": 1
+    },
+    {
+      "name": "get_carts",
+      "request": {
+        "method": "GET",
+        "url": "/carts"
+      },
+      "response": {
+        "status": 200,
+        "statusMessage": "I am status message where are you looking",
+        "jsonBody": {
+          "message": "Hurray you got correct response",
+          "carts": [
+            {
+              "id": 1,
+              "userId": 1,
+              "date": "2020-03-02T00:00:00.000Z",
+              "products": [
+                { "productId": 1, "quantity": 4 },
+                { "productId": 2, "quantity": 1 }
+              ]
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    }
+  ]
+}

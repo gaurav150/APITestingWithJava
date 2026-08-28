@@ -1,0 +1,70 @@
+{
+  "mappings": [
+    {
+      "name": "first_stub",
+      "request": {
+        "method": "GET",
+        "url": "/cycleRequest"
+      },
+      "response": {
+        "status": 200,
+        "jsonBody": {
+          "message": "Response A",
+          "status": "randomA"
+        }
+      },
+      "persistent": true,
+      "scenarioName": "Cycle-sequence",
+      "requiredScenarioState": "Started",
+      "newScenarioState": "second-stub"
+    },
+    {
+      "name": "second-stub",
+      "request": {
+        "method": "GET",
+        "url": "/cycleRequest"
+      },
+      "response": {
+        "status": 200,
+        "jsonBody": {
+          "message": "Response B",
+          "status": "randomB"
+        }
+      },
+      "persistent": true,
+      "scenarioName": "Cycle-sequence",
+      "requiredScenarioState": "second-stub",
+      "newScenarioState": "third-stub"
+    },
+    {
+      "name": "third_stub",
+      "request": {
+        "method": "GET",
+        "url": "/cycleRequest"
+      },
+      "response": {
+        "status": 200,
+        "jsonBody": {
+          "message": "Response C",
+          "status": "randomC"
+        }
+      },
+      "persistent": true,
+      "scenarioName": "Cycle-sequence",
+      "requiredScenarioState": "third-stub",
+      "newScenarioState": "third-stub"
+    },
+    {
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/posts/.*"
+      },
+      "response": {
+        "proxyBaseUrl": "https://jsonplaceholder.typicode.com"
+      }
+    }
+  ],
+  "meta": {
+    "total": 4
+  }
+}
