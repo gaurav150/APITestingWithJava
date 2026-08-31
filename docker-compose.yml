@@ -19,7 +19,7 @@ services:
     environment:
       - REVERSE_PROXY_ADDRESS=${PRODUCTS_TARGET_URL}
       - LOCAL_RESPONSE_TEMPLATE=true
-    command: ["--proxy-all", "${PRODUCTS_TARGET_URL}", "--global-response-templating", "--verbose"]
+    command: [ "--proxy-all", "${PRODUCTS_TARGET_URL}", "--global-response-templating", "--verbose" ]
     networks:
       - backend
 
@@ -32,7 +32,19 @@ services:
     environment:
       - REVERSE_PROXY_ADDRESS=${POSTS_TARGET_URL}
       - LOCAL_RESPONSE_TEMPLATE=true
-    command: ["--proxy-all", "${POSTS_TARGET_URL}", "--global-response-templating", "--verbose"]
+    command: [ "--proxy-all", "${POSTS_TARGET_URL}", "--global-response-templating", "--verbose" ]
+    networks:
+      - backend
+
+  shetty-service:
+    build: .
+    image: my-wiremock:latest
+    container_name: rahul-shetty-service
+    ports:
+      - "8183:8080"
+    environment:
+      - REVERSE_PROXY_ADDRESS=${RAHUL_SHETTY_TARGET_URL}
+    command: [ "--proxy-all", "${RAHUL_SHETTY_TARGET_URL}", "--global-response-templating" ]
     networks:
       - backend
 
