@@ -16,10 +16,10 @@ services:
     container_name: products-service
     ports:
       - "8181:8080"
-#    environment:
-#      - REVERSE_PROXY_ADDRESS=${PRODUCTS_TARGET_URL}
-#      - LOCAL_RESPONSE_TEMPLATE=true
-#    command: ["--proxy-all", "${PRODUCTS_TARGET_URL}", "--global-response-templating", "--verbose"]
+    environment:
+      - REVERSE_PROXY_ADDRESS=${PRODUCTS_TARGET_URL}
+      - LOCAL_RESPONSE_TEMPLATE=true
+    command: ["--proxy-all", "${PRODUCTS_TARGET_URL}", "--global-response-templating", "--verbose"]
     networks:
       - backend
 
@@ -29,10 +29,10 @@ services:
     container_name: posts-service
     ports:
       - "8182:8080"
-#    environment:
-#      - REVERSE_PROXY_ADDRESS=${POSTS_TARGET_URL}
-#      - LOCAL_RESPONSE_TEMPLATE=true
-#    command: ["--proxy-all", "${POSTS_TARGET_URL}", "--global-response-templating", "--verbose"]
+    environment:
+      - REVERSE_PROXY_ADDRESS=${POSTS_TARGET_URL}
+      - LOCAL_RESPONSE_TEMPLATE=true
+    command: ["--proxy-all", "${POSTS_TARGET_URL}", "--global-response-templating", "--verbose"]
     networks:
       - backend
 

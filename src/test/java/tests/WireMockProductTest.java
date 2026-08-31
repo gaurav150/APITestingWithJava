@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 import io.github.cdimascio.dotenv.Dotenv;
 
 
-import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.*;
 
 public class WireMockProductTest {
     Dotenv dotenv = Dotenv.load();
