@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * Permanent fix for WireMock stub duplication.
- *
+ *<p>
  * What it does:
  * 1. Fetches ALL currently loaded stubs from a running WireMock instance
  *    (GET /__admin/mappings).
@@ -29,15 +29,15 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * 6. Saves the clean set to clean-master-mappings.json - a single, permanent
  *    source of truth to use for every future import instead of an old file
  *    that already has duplicates baked into it.
- *
+ *<p>
  * Usage (no external dependencies beyond Jackson, which you likely already
  * have via rest-assured's transitive deps - check your pom.xml first):
- *
+ * <p>
  *   javac DedupeWireMock.java
  *   java DedupeWireMock
- *
+ * <p>
  * Or pass a custom host:
- *   java DedupeWireMock http://localhost:8181
+ *   java DedupeWireMock <a href="http://localhost:8181">...</a>
  */
 public class DedupeWireMock {
 
@@ -59,7 +59,7 @@ public class DedupeWireMock {
         for (JsonNode stub : mappings) {
             String fp = fingerprint(stub);
             if (unique.containsKey(fp)) {
-                removedIds.add(stub.path("id").asText("(no id)"));
+                removedIds.add(text(stub.path("id"), "(no id)"));
             } else {
                 unique.put(fp, stub);
             }
@@ -113,16 +113,24 @@ public class DedupeWireMock {
     private static String fingerprint(JsonNode stub) {
         JsonNode req = stub.path("request");
         StringBuilder sb = new StringBuilder();
-        sb.append(req.path("method").asText(""));
-        sb.append('|').append(req.path("url").asText(""));
-        sb.append('|').append(req.path("urlPath").asText(""));
-        sb.append('|').append(req.path("urlPathPattern").asText(""));
-        sb.append('|').append(req.path("urlPattern").asText(""));
-        sb.append('|').append(req.path("urlPathTemplate").asText(""));
+        sb.append(text(req.path("method")));
+        sb.append('|').append(text(req.path("url")));
+        sb.append('|').append(text(req.path("urlPath")));
+        sb.append('|').append(text(req.path("urlPathPattern")));
+        sb.append('|').append(text(req.path("urlPattern")));
+        sb.append('|').append(text(req.path("urlPathTemplate")));
         sb.append('|').append(req.has("bodyPatterns") ? req.get("bodyPatterns").toString() : "");
-        sb.append('|').append(stub.path("scenarioName").asText(""));
-        sb.append('|').append(stub.path("requiredScenarioState").asText(""));
+        sb.append('|').append(text(stub.path("scenarioName")));
+        sb.append('|').append(text(stub.path("requiredScenarioState")));
         return sb.toString();
+    }
+
+    private static String text(JsonNode node) {
+        return text(node, "");
+    }
+
+    private static String text(JsonNode node, String defaultValue) {
+        return (node.isMissingNode() || node.isNull()) ? defaultValue : node.asText();
     }
 
     private static JsonNode fetchMappings(String host) throws IOException, InterruptedException {

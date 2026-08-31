@@ -1,10 +1,47 @@
 {
-  "name": "network_related_faults",
-  "request": {
-    "method": "GET",
-    "url": "/getting/fault"
-  },
-  "response": {
-    "fault": "CONNECTION_RESET_BY_PEER"
+  "mappings": [
+    {
+      "name": "network_related_faults",
+      "request": {
+        "method": "GET",
+        "url": "/getting/network/fault"
+      },
+      "response": {
+        "fault": "CONNECTION_RESET_BY_PEER"
+      }
+    },
+    {
+      "name": "empty_response",
+      "request": {
+        "method": "GET",
+        "url": "/getting/empty/response"
+      },
+      "response": {
+        "fault": "EMPTY_RESPONSE"
+      }
+    },
+    {
+      "name": "malformed-response-chunk",
+      "request": {
+        "method": "GET",
+        "url": "/getting/malformed-chunk"
+      },
+      "response": {
+        "fault": "MALFORMED_RESPONSE_CHUNK"
+      }
+    },
+    {
+      "name": "random-data-close",
+      "request": {
+        "method": "GET",
+        "url": "/getting/random-data-close"
+      },
+      "response": {
+        "fault": "RANDOM_DATA_THEN_CLOSE"
+      }
+    }
+  ],
+  "meta": {
+    "total": 4
   }
 }
