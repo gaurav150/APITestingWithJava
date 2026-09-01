@@ -536,10 +536,26 @@
         }
       },
       "priority": 5
+    },
+    {
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/products/-[0-9]+"
+      },
+      "response": {
+        "status": 400,
+        "jsonBody": {
+          "error": "Invalid product ID"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "priority": 1
     }
 
   ],
   "meta": {
-    "total": 21
+    "total": 22
   }
 }

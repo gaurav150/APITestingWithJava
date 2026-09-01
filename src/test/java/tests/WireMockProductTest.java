@@ -1,8 +1,11 @@
 package tests;
 
+import io.restassured.response.Response;
+import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import io.github.cdimascio.dotenv.Dotenv;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 
 import static io.restassured.RestAssured.*;
@@ -10,13 +13,15 @@ import static io.restassured.RestAssured.*;
 public class WireMockProductTest {
     Dotenv dotenv = Dotenv.load();
     String baseUrl = dotenv.get("WIREMOCK_BASE_URL");
+//    String baseUrlFakeStore = dotenv.get("PRODUCTS_TARGET_URL");
+//    above URI for Real API
 
-    @Test
+    @Test(description = "getting product from stubbing files.")
     public void getProductsFromWireMock() {
 
         System.out.println("value of url is --> " + baseUrl);
         String response =
-                        given()
+                given()
                         .baseUri(baseUrl)
                         .when()
                         .get("/products")
@@ -30,28 +35,55 @@ public class WireMockProductTest {
     }
 
 
-    @Test(expectedExceptions = Exception.class)
+    @Test(expectedExceptions = Exception.class, description = "testing for fault tests")
     public void faultTestCase() {
-                given()
+        given()
                 .baseUri(baseUrl)
                 .when()
                 .get("/getting/network/fault");
 
     }
 
-    @Test
+    @Test(description = "testing for fault tests 2nd method")
     public void faultSecondTestcase() {
         Exception exception = Assert.expectThrows(Exception.class, () -> {
-                    given()
+            given()
                     .baseUri(baseUrl)
                     .when()
                     .get("/getting/network/fault");
         });
 
-        System.out.println("exception message is -->>>>");
-        System.out.println(exception);
         Assert.assertTrue(
                 exception.getMessage().contains("failed to respond"));
 
+    }
+
+    @Test(description = "Adding a new product to fakeStoreAPI using stub")
+    public void postAddNewProduct() {
+        String requestBody = """
+                {
+                    "id": 0,
+                    "title": "Sample",
+                    "price": 0.9,
+                    "description": "Hello sample",
+                    "category": "fun",
+                    "image": "http://example.com"
+                }
+                """;
+        Response response = given()
+                .header("ContentType", "application/json")
+                .body(requestBody)
+                .baseUri(baseUrl)
+                .when()
+                .post("/products")
+                .then()
+                .statusCode(201)
+                .extract()
+                .response();
+        System.out.println(response.asString());
+        System.out.println(response.getStatusLine());
+
+        assertThat(response.getStatusLine(),
+                Matchers.containsString("Created"));
     }
 }
