@@ -1,0 +1,36 @@
+{
+  "mappings": [
+    {
+      "name": "add_place_proxy",
+      "request": {
+        "method": "POST",
+        "urlPath": "/maps/api/place/add/json"
+      },
+      "response": {
+        "proxyBaseUrl": "https://rahulshettyacademy.com"
+      }
+    },
+    {
+      "name": "update_place_proxy",
+      "request": {
+        "method": "PUT",
+        "urlPath": "/maps/api/place/update/json"
+      },
+      "response": {
+        "proxyBaseUrl": "https://rahulshettyacademy.com"
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/posts/.*"
+      },
+      "response": {
+        "proxyBaseUrl": "https://jsonplaceholder.typicode.com"
+      }
+    }
+  ],
+  "meta": {
+    "total": 3
+  }
+}

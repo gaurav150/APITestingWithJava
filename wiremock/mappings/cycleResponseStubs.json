@@ -53,18 +53,9 @@
       "scenarioName": "Cycle-sequence",
       "requiredScenarioState": "third-stub",
       "newScenarioState": "third-stub"
-    },
-    {
-      "request": {
-        "method": "GET",
-        "urlPathPattern": "/posts/.*"
-      },
-      "response": {
-        "proxyBaseUrl": "https://jsonplaceholder.typicode.com"
-      }
     }
   ],
   "meta": {
-    "total": 4
+    "total": 3
   }
 }

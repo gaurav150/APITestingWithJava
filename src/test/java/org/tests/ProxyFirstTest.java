@@ -1,4 +1,4 @@
-package tests;
+package org.tests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -15,20 +15,20 @@ import org.example.AddPlace;
 import org.example.Location;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import io.github.cdimascio.dotenv.Dotenv;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.equalTo;
 
 public class ProxyFirstTest {
-    Dotenv dotenv = Dotenv.load();
 
     @Test(description = "Get products from proxy server")
     public void getProductsFromProxy() {
-        String baseUrl = dotenv.get("WIREMOCK_BASE_URL");
+        String baseUrl= System.getenv("WIREMOCK_BASE_URL");
+        System.out.println("WIREMOCK_BASE_URL = " + baseUrl);
         String response =
                 given()
                         .baseUri(baseUrl)
@@ -45,7 +45,7 @@ public class ProxyFirstTest {
 
     @Test(description = "Get Json Holder API from proxy server")
     public void getPlaceHolderAPIUsingProxy() {
-        String baseUrl = dotenv.get("JSON_PLACEHOLDER_API");
+        String baseUrl= System.getenv("WIREMOCK_BASE_URL");
 
         int postId = 3;
         Response response = getJsonPlaceholderPostById(baseUrl, postId, 200);
@@ -54,21 +54,21 @@ public class ProxyFirstTest {
 
     @Test(description = "Verify valid post ID returns post details")
     public void verifyValidPostId() {
-        String baseUrl = dotenv.get("JSON_PLACEHOLDER_API");
+        String baseUrl= System.getenv("WIREMOCK_BASE_URL");
 
-        int postId = 3;
+//      Generate a random postId (1–20) at runtime using ThreadLocalRandom.
+        int postId = ThreadLocalRandom.current().nextInt(1, 21);
+        System.out.println("post Id is -->>"+ postId);
         Response response = getJsonPlaceholderPostById(baseUrl, postId, 200);
         JsonPath js = new JsonPath(response.asString());
 
         Assert.assertEquals(js.getInt("id"), postId, "postId should match");
         Assert.assertNotNull(response.getBody(), "body should not be null");
-        System.out.println("response of second test case is ->");
-        System.out.println(response.asString());
     }
 
     @Test(description = "Verify non-existing post ID")
     public void verifyInvalidPostId() throws JsonProcessingException {
-        String baseUrl = dotenv.get("JSON_PLACEHOLDER_API");
+        String baseUrl= System.getenv("WIREMOCK_BASE_URL");
         int postId = 99999;
         Response response = getJsonPlaceholderPostById(baseUrl, postId, 404);
         ObjectMapper mapper = new ObjectMapper();
@@ -80,7 +80,7 @@ public class ProxyFirstTest {
 
     @Test(description = "Verify negative post ID")
     public void verifyNegativePostId() throws JsonProcessingException {
-        String baseUrl = dotenv.get("JSON_PLACEHOLDER_API");
+        String baseUrl= System.getenv("WIREMOCK_BASE_URL");
         int postId = -1;
         Response response = getJsonPlaceholderPostById(baseUrl, postId, 404);
         ObjectMapper mapper = new ObjectMapper();
@@ -93,10 +93,10 @@ public class ProxyFirstTest {
 
     @Test(description = "adding place using proxy API.")
     public void addingPlace() {
-        String baseURI = dotenv.get("SHETTY_URL");
+        String baseUrl= System.getenv("WIREMOCK_BASE_URL");
         AddPlace p = getAddPlace();
         RequestSpecification res = given()
-                .spec(requestSpecBuild(baseURI))
+                .spec(requestSpecBuild(baseUrl))
                 .body(p);
 
 
@@ -123,7 +123,7 @@ public class ProxyFirstTest {
 
         //update Place
 
-        RequestSpecification updatedRequest = given().spec(requestSpecBuild(baseURI))
+        RequestSpecification updatedRequest = given().spec(requestSpecBuild(baseUrl))
                 .body("{\n" +
                         "    \"place_id\":\"" + placeId + "\",\n" +
                         "    \"address\": \"70 summer walk , USA\",\n" +
@@ -140,7 +140,7 @@ public class ProxyFirstTest {
     //    positive test case for PUT
     @Test(description = "Verify product can be updated successfully using PUT request")
     public void verifyProductUpdateUsingPutRequest() {
-        String baseUrl = dotenv.get("WIREMOCK_BASE_URL");
+        String baseUrl= System.getenv("WIREMOCK_BASE_URL");
         String requestBody = """
                 {
                 "id": 1,
@@ -159,7 +159,7 @@ public class ProxyFirstTest {
 
     @Test(description = "Verify product can be updated with different valid product details")
     public void verifyProductUpdateWithDifferentValidDetails() {
-        String baseUrl = dotenv.get("WIREMOCK_BASE_URL");
+        String baseUrl= System.getenv("WIREMOCK_BASE_URL");
 
         String requestBody = """
                 {
@@ -182,7 +182,7 @@ public class ProxyFirstTest {
     // negative test case for PUT
     @Test(description = "Verify update fails for non-existing product ID")
     public void verifyProductUpdateWithNonExistingProductId() {
-        String baseUrl = dotenv.get("WIREMOCK_BASE_URL");
+        String baseUrl= System.getenv("WIREMOCK_BASE_URL");
 
         String requestBody = """
                 {
@@ -207,7 +207,7 @@ public class ProxyFirstTest {
 
     @Test(description = "Verify product update fails when request body is invalid")
     public void verifyProductUpdateWithInvalidRequestBody() {
-        String baseUrl = dotenv.get("WIREMOCK_BASE_URL");
+        String baseUrl= System.getenv("WIREMOCK_BASE_URL");
 
         String requestBody = """
                 {
@@ -230,8 +230,8 @@ public class ProxyFirstTest {
     // delete product id
     @Test(description = "Verify existing product can be deleted successfully")
     public void verifyDeleteExistingProduct() {
+        String baseUrl= System.getenv("WIREMOCK_BASE_URL");
 
-        String baseUrl = dotenv.get("WIREMOCK_BASE_URL");
         int productID = 1;
 
         Response response = deleteProductById(baseUrl, productID, 200);
@@ -245,8 +245,8 @@ public class ProxyFirstTest {
 
     @Test(description = "Verify deleted product details are returned successfully")
     public void verifyDeletedProductDetails() {
+        String baseUrl= System.getenv("WIREMOCK_BASE_URL");
 
-        String baseUrl = dotenv.get("WIREMOCK_BASE_URL");
         int productID = 1;
 
         Response response = deleteProductById(baseUrl, productID, 200);
@@ -273,7 +273,7 @@ public class ProxyFirstTest {
     @Test(description = "Verify delete fails for non-existing product ID")
     public void verifyDeleteNonExistingProduct() {
 
-        String baseUrl = dotenv.get("WIREMOCK_BASE_URL");
+        String baseUrl= System.getenv("WIREMOCK_BASE_URL");
         int productID = 9999;
 
         Response response = deleteProductById(baseUrl, productID, 404);
@@ -287,7 +287,7 @@ public class ProxyFirstTest {
     @Test(description = "Verify delete fails for invalid product ID")
     public void verifyDeleteWithInvalidProductId() {
 
-        String baseUrl = dotenv.get("WIREMOCK_BASE_URL");
+        String baseUrl= System.getenv("WIREMOCK_BASE_URL");
         int productID = -9999;
 
         Response response = deleteProductById(baseUrl, productID, 400);

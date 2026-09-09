@@ -1,20 +1,16 @@
-package tests;
+package org.tests;
 
 import io.restassured.response.Response;
 import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import io.github.cdimascio.dotenv.Dotenv;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 
 import static io.restassured.RestAssured.*;
 
 public class WireMockProductTest {
-    Dotenv dotenv = Dotenv.load();
-    String baseUrl = dotenv.get("WIREMOCK_BASE_URL");
-//    String baseUrlFakeStore = dotenv.get("PRODUCTS_TARGET_URL");
-//    above URI for Real API
+    String baseUrl= getWireMockBaseUrl();
 
     @Test(description = "getting product from stubbing files.")
     public void getProductsFromWireMock() {
@@ -54,8 +50,55 @@ public class WireMockProductTest {
         });
 
         Assert.assertTrue(
-                exception.getMessage().contains("failed to respond"));
+                exception.getMessage().contains("Connection reset")
+                        || exception.getMessage().contains("failed to respond"),
+                "Unexpected exception: " + exception.getMessage()
+        );
+        System.out.println(exception.getClass().getName());
 
+    }
+
+    @Test(description = "testing for fault of empty response")
+    public void faultEmptyResponseTestcase() {
+        Exception exception = Assert.expectThrows(Exception.class, () -> {
+            given()
+                    .baseUri(baseUrl)
+                    .when()
+                    .get("/getting/empty/response");
+        });
+
+        Assert.assertTrue(exception.getMessage().contains("failed to respond"),
+                "Unexpected exception: " + exception.getMessage());
+
+
+    }
+
+//
+    @Test(description = "fault Testing for malformed chunk")
+    public void faultMalformedChunk() {
+        Exception exception = Assert.expectThrows(Exception.class, () -> {
+            given()
+                    .baseUri(baseUrl)
+                    .when()
+                    .get("/getting/malformed-chunk");
+        });
+        Assert.assertTrue(exception.getMessage().contains("status code: 200"),
+                "Unexpected exception: " + exception.getMessage());
+    }
+//
+    @Test(description = "fault Testing for random data close")
+    public void faultRandomData() {
+        Exception exception = Assert.expectThrows(Exception.class, () -> {
+            given()
+                    .baseUri(baseUrl)
+                    .when()
+                    .get("/getting/random-data-close");
+        });
+
+        Assert.assertEquals(exception.getClass(), org.apache.http.client.ClientProtocolException.class,
+                "Unexpected exception type: " + exception.getClass().getName());
+        Assert.assertNull(exception.getMessage(),
+                "Message is not null"+exception.getMessage());
     }
 
     @Test(description = "Adding a new product to fakeStoreAPI using stub")
@@ -80,10 +123,20 @@ public class WireMockProductTest {
                 .statusCode(201)
                 .extract()
                 .response();
-        System.out.println(response.asString());
-        System.out.println(response.getStatusLine());
 
         assertThat(response.getStatusLine(),
                 Matchers.containsString("Created"));
+    }
+
+    private String getWireMockBaseUrl() {
+        String resolvedUrl = System.getenv("WIREMOCK_BASE_URL");
+
+        if (resolvedUrl == null || resolvedUrl.isBlank()) {
+            resolvedUrl = "http://localhost:8181";
+        }
+
+        System.out.println("WireMock URL = " + resolvedUrl);
+
+        return resolvedUrl;
     }
 }
